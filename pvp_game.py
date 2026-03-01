@@ -7,6 +7,7 @@ WIDTH, HEIGHT = 1000, 600
 FLOOR_Y = 500
 GRAVITY = 0.8
 
+
 class Fighter:
     def __init__(self, x, y, p_id, controls, sprite_list):
         self.rect = pygame.Rect(x, y, 80, 120) # Adjust size to fit your sprites
@@ -103,11 +104,14 @@ class Fighter:
             
         surface.blit(img, (self.rect.x, self.rect.y))
 
+# FIX 1: Set the video mode before creating objects that load images
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+clock = pygame.time.Clock()
 # --- Main Setup ---
-p1_files = ["sprite_neutral_p1.png", "sprite_attack_p1.png", "sprite_defend_p1.png", 
-            "sprite_injured_p1.png", "sprite_defeated_p1.png", "sprite_jumping_p1.png"]
-p2_files = ["sprite_neutral_p2.png", "sprite_attack_p2.png", "sprite_defend_p2.png", 
-            "sprite_injured_p2.png", "sprite_defeated_p2.png", "sprite_jumping_p2.png"]
+p1_files = ["data/sprite_neutral_p1.png", "data/sprite_attack_p1.png", "data/sprite_defend_p1.png", 
+            "data/sprite_injured_p1.png", "data/sprite_defeated_p1.png", "data/sprite_jumping_p1.png"]
+p2_files = ["data/sprite_neutral_p2.png", "data/sprite_attack_p2.png", "data/sprite_defend_p2.png", 
+            "data/sprite_injured_p2.png", "data/sprite_defeated_p2.png", "data/sprite_jumping_p2.png"]
 
 # ... (Insert p1_controls and p2_controls from previous snippet) ...
 
@@ -132,8 +136,8 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    player1.move(player2)
-    player2.move(player1)
+    player1.update(player2)
+    player2.update(player1)
     
     player1.draw(screen)
     player2.draw(screen)
