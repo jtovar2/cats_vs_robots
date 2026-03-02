@@ -15,7 +15,7 @@ big_font = pygame.font.SysFont("arial", 100)
 small_font = pygame.font.SysFont("arial", 40)
 
 # --- CHARACTER SELECT LOGIC ---
-possible_characters = ['tabby', 'robot']
+possible_characters = ['grey_tabby','tabby', 'robot']
 
 def draw_text(text, font, color, x, y):
     img = font.render(text, True, color)
