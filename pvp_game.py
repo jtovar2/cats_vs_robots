@@ -15,7 +15,7 @@ big_font = pygame.font.SysFont("arial", 100)
 small_font = pygame.font.SysFont("arial", 40)
 
 class Fighter:
-    def __init__(self, x, y, p_id, controls, sprite_list):
+    def __init__(self, x, y, p_id, controls,  char_name):
         self.start_x = x
         self.start_y = y
         self.rect = pygame.Rect(x, y, 80, 120)
@@ -30,14 +30,21 @@ class Fighter:
         self.is_defending = False
         self.hit_timer = 0
         self.facing_right = True
+        self.char_name = char_name
         
+        neutral = f'data/{self.char_name}/sprite_neutral.png'
+        attack = f'data/{self.char_name}/sprite_attack.png'
+        defend = f'data/{self.char_name}/sprite_defend.png'
+        injured = f'data/{self.char_name}/sprite_injured.png'
+        dead = f'data/{self.char_name}/sprite_defeated.png'
+        jump = f'data/{self.char_name}/sprite_jumping.png'
         self.sprites = {
-            'neutral': pygame.image.load(sprite_list[0]).convert_alpha(),
-            'attack':  pygame.image.load(sprite_list[1]).convert_alpha(),
-            'defend':  pygame.image.load(sprite_list[2]).convert_alpha(),
-            'injured': pygame.image.load(sprite_list[3]).convert_alpha(),
-            'dead':    pygame.image.load(sprite_list[4]).convert_alpha(),
-            'jump':    pygame.image.load(sprite_list[5]).convert_alpha()
+            'neutral': pygame.image.load(neutral).convert_alpha(),
+            'attack':  pygame.image.load(attack).convert_alpha(),
+            'defend':  pygame.image.load(defend).convert_alpha(),
+            'injured': pygame.image.load(injured).convert_alpha(),
+            'dead':    pygame.image.load(dead).convert_alpha(),
+            'jump':    pygame.image.load(jump).convert_alpha()
         }
 
     def reset(self):
@@ -141,7 +148,7 @@ def draw_health_bar(surface, x, y, health, max_health=100, width=300, height=25,
 
     pygame.draw.rect(surface, (255, 255, 255), (x, y, width, height), 3)
 
-
+possible_characters = ['tabby', 'robot']
 # Setup
 p1_files = ["data/sprite_neutral_p1.png", "data/sprite_attack_p1.png", "data/sprite_defend_p1.png", 
             "data/sprite_injured_p1.png", "data/sprite_defeated_p1.png", "data/sprite_jumping_p1.png"]
@@ -151,8 +158,8 @@ p2_files = ["data/sprite_neutral_p2.png", "data/sprite_attack_p2.png", "data/spr
 p1_controls = {'left': pygame.K_a, 'right': pygame.K_d, 'jump': pygame.K_f, 'attack': pygame.K_e, 'defend': pygame.K_r}
 p2_controls = {'left': pygame.K_j, 'right': pygame.K_l, 'jump': pygame.K_SEMICOLON, 'attack': pygame.K_o, 'defend': pygame.K_p}
 
-player1 = Fighter(200, 380, 1, p1_controls, p1_files)
-player2 = Fighter(700, 380, 2, p2_controls, p2_files)
+player1 = Fighter(200, 380, 1, p1_controls, 'tabby')
+player2 = Fighter(700, 380, 2, p2_controls, 'robot')
 
 # Round System
 p1_wins = 0
