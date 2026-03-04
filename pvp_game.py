@@ -15,7 +15,7 @@ big_font = pygame.font.SysFont("arial", 100)
 small_font = pygame.font.SysFont("arial", 40)
 
 # --- CHARACTER SELECT LOGIC ---
-possible_characters = ['tingo','sushi', 'robot']
+possible_characters = ['tabby', 'robot']
 
 def draw_text(text, font, color, x, y):
     img = font.render(text, True, color)
@@ -179,8 +179,8 @@ def draw_health_bar(surface, x, y, health, reverse=False):
 # --- INITIALIZATION ---
 p1_choice, p2_choice = select_screen()
 
-p1_controls = {'left': pygame.K_a, 'right': pygame.K_d, 'jump': pygame.K_f, 'attack': pygame.K_e, 'defend': pygame.K_r}
-p2_controls = {'left': pygame.K_j, 'right': pygame.K_l, 'jump': pygame.K_SEMICOLON, 'attack': pygame.K_o, 'defend': pygame.K_p}
+p1_controls = {'left': pygame.K_a, 'right': pygame.K_d, 'jump': pygame.K_w, 'attack': pygame.K_e, 'defend': pygame.K_r}
+p2_controls = {'left': pygame.K_j, 'right': pygame.K_l, 'jump': pygame.K_i, 'attack': pygame.K_o, 'defend': pygame.K_p}
 
 player1 = Fighter(200, 380, 1, p1_controls, p1_choice)
 player2 = Fighter(700, 380, 2, p2_controls, p2_choice)
