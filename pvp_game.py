@@ -28,57 +28,107 @@ def select_screen():
     p1_ready = False
     p2_ready = False
 
+    # Load portraits
+    portraits = {}
+    for char in possible_characters:
+        img = pygame.image.load(f"data/{char}/sprite_neutral.png").convert_alpha()
+        portraits[char] = pygame.transform.scale(img, (220, 220))
+
+    desc_font = pygame.font.SysFont("arial", 22)
+    small_ui = pygame.font.SysFont("arial", 20)
+
+    pulse_timer = 0
+
     while selecting:
-        screen.fill((20, 20, 20))
-        draw_text("SELECT YOUR FIGHTER", small_font, (255, 255, 255), WIDTH//2 - 180, 50)
+        pulse_timer += 0.05
+        screen.fill((15, 15, 25))
 
-        # Player 1 Box
+        # Title
+        draw_text("SELECT YOUR FIGHTER", small_font, (255, 255, 255), WIDTH//2 - 180, 40)
+
+        # VS Text
+        vs_scale = 1 + 0.05 * pygame.math.Vector2(1,0).rotate(pulse_timer*50).x
+        vs_font = pygame.font.SysFont("arial", int(80 * vs_scale))
+        draw_text("VS", vs_font, (200, 50, 50), WIDTH//2 - 40, 250)
+
+        # ---------------- PLAYER 1 ----------------
         p1_color = (0, 255, 0) if p1_ready else (255, 255, 255)
-        pygame.draw.rect(screen, p1_color, (150, 150, 300, 300), 2)
-        draw_text("PLAYER 1", small_font, p1_color, 220, 100)
-        draw_text(possible_characters[p1_index].upper(), big_font, p1_color, 170, 250)
-        draw_text("A / D to Change | E to Confirm", pygame.font.SysFont("arial", 20), (150, 150, 150), 180, 460)
+        p1_box = pygame.Rect(100, 130, 300, 350)
+        pygame.draw.rect(screen, p1_color, p1_box, 3)
 
-        # Player 2 Box
+        draw_text("PLAYER 1", small_font, p1_color, 170, 90)
+
+        char1 = possible_characters[p1_index]
+        screen.blit(portraits[char1], (140, 160))
+        draw_text(char1.upper(), big_font, p1_color, 120, 380)
+
+        draw_text("A/D Change", small_ui, (150,150,150), 150, 430)
+        draw_text("E Confirm", small_ui, (150,150,150), 160, 455)
+
+        if p1_ready:
+            overlay = pygame.Surface((300, 350), pygame.SRCALPHA)
+            overlay.fill((0, 255, 0, 60))
+            screen.blit(overlay, (100, 130))
+
+        # ---------------- PLAYER 2 ----------------
         p2_color = (0, 255, 0) if p2_ready else (255, 255, 255)
-        pygame.draw.rect(screen, p2_color, (550, 150, 300, 300), 2)
-        draw_text("PLAYER 2", small_font, p2_color, 620, 100)
-        draw_text(possible_characters[p2_index].upper(), big_font, p2_color, 570, 250)
-        draw_text("J / L to Change | O to Confirm", pygame.font.SysFont("arial", 20), (150, 150, 150), 580, 460)
+        p2_box = pygame.Rect(600, 130, 300, 350)
+        pygame.draw.rect(screen, p2_color, p2_box, 3)
 
-        # Error message if same character selected
-        if possible_characters[p1_index] == possible_characters[p2_index]:
+        draw_text("PLAYER 2", small_font, p2_color, 670, 90)
+
+        char2 = possible_characters[p2_index]
+        screen.blit(portraits[char2], (640, 160))
+        draw_text(char2.upper(), big_font, p2_color, 620, 380)
+
+        draw_text("J/L Change", small_ui, (150,150,150), 660, 430)
+        draw_text("O Confirm", small_ui, (150,150,150), 670, 455)
+
+        if p2_ready:
+            overlay = pygame.Surface((300, 350), pygame.SRCALPHA)
+            overlay.fill((0, 255, 0, 60))
+            screen.blit(overlay, (600, 130))
+
+        # Prevent same character
+        if char1 == char2:
             draw_text("CANNOT SELECT SAME CHARACTER", small_font, (255, 0, 0), WIDTH//2 - 250, 520)
-            p1_ready = p2_ready = False # Force unready if they match
+            p1_ready = False
+            p2_ready = False
 
+        # ---------------- INPUT ----------------
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
             if event.type == pygame.KEYDOWN:
-                # P1 Controls
                 if not p1_ready:
-                    if event.key == pygame.K_a: p1_index = (p1_index - 1) % len(possible_characters)
-                    if event.key == pygame.K_d: p1_index = (p1_index + 1) % len(possible_characters)
-                    if event.key == pygame.K_e and possible_characters[p1_index] != possible_characters[p2_index]:
+                    if event.key == pygame.K_a:
+                        p1_index = (p1_index - 1) % len(possible_characters)
+                    if event.key == pygame.K_d:
+                        p1_index = (p1_index + 1) % len(possible_characters)
+                    if event.key == pygame.K_e and char1 != char2:
                         p1_ready = True
-                # P2 Controls
+
                 if not p2_ready:
-                    if event.key == pygame.K_j: p2_index = (p2_index - 1) % len(possible_characters)
-                    if event.key == pygame.K_l: p2_index = (p2_index + 1) % len(possible_characters)
-                    if event.key == pygame.K_o and possible_characters[p1_index] != possible_characters[p2_index]:
+                    if event.key == pygame.K_j:
+                        p2_index = (p2_index - 1) % len(possible_characters)
+                    if event.key == pygame.K_l:
+                        p2_index = (p2_index + 1) % len(possible_characters)
+                    if event.key == pygame.K_o and char1 != char2:
                         p2_ready = True
-                
-                # Undo Ready
-                if event.key == pygame.K_r: p1_ready = False
-                if event.key == pygame.K_p: p2_ready = False
+
+                if event.key == pygame.K_r:
+                    p1_ready = False
+                if event.key == pygame.K_p:
+                    p2_ready = False
 
         if p1_ready and p2_ready:
-            return possible_characters[p1_index], possible_characters[p2_index]
+            pygame.time.delay(800)
+            return char1, char2
 
         pygame.display.update()
         clock.tick(60)
-
 # --- FIGHTER CLASS (UNCHANGED) ---
 class Fighter:
     def __init__(self, x, y, p_id, controls, char_name):
